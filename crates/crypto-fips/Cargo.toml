@@ -38,14 +38,15 @@ impl LunarSecureChannel {
             let ssl = wolf::wolfSSL_new(ctx);
             let fd = stream.as_raw_fd();
             wolf::wolfSSL_set_fd(ssl, fd);
+            // 5. Set session timeout to 30 seconds (idle / session ticket lifetime)
+            wolf::wolfSSL_set_timeout(ssl, 30);
 
-            // 5. Perform the Handshake
+            // 6. Perform the Handshake
             // This uses the TCXO-backed clock for timestamp verification
             if wolf::wolfSSL_connect(ssl) != wolf::WOLFSSL_SUCCESS {
                 let err = wolf::wolfSSL_get_error(ssl, 0);
                 return Err(format!("Handshake failed: Error {}", err));
             }
-
             println!("[SUCCESS] Secure Channel Established over Virtual Cable.");
             Ok(Self { ssl })
         }
