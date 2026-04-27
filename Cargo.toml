@@ -1,0 +1,8 @@
+[features]
+default = ["lunanet-dtn"]
+fixed_site = ["high_speed_srio", "ceph_storage", "pqc_encryption"]
+rover = ["power_management", "rad_hard_tmr", "low_latency_radio"]
+
+
+[dependencies]
+wolfssl-sys = { version = "1.0", features = ["fips", "zynq-acceleration"] }
