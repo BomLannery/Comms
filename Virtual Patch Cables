@@ -1,0 +1,18 @@
+# connect these routers using veth pairs. In a lunar environment, this is superior to a virtual switch because it’s deterministic and consumes less RAM.
+
+ip netns add VR_FS_PRIMARY
+ip netns add VR_FS_LOCAL
+
+# Create internal bridge link for the Fixed Site
+ip link add eth-fs-int type veth peer name eth-fs-ext
+ip link set eth-fs-int netns VR_FS_PRIMARY
+ip link set eth-fs-ext netns VR_FS_LOCAL
+
+# --- ROVER SETUP ---
+ip netns add VR_FR_COMMS
+ip netns add VR_FR_INTERNAL
+
+# Create internal link for the Rover
+ip link add eth-fr-int type veth peer name eth-fr-ext
+ip link set eth-fr-int netns VR_FR_COMMS
+ip link set eth-fr-ext netns VR_FR_INTERNAL
